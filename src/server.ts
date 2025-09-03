@@ -6,6 +6,7 @@ import connectDB from './database/db.ts';
 import { RateLimiterRedis } from 'rate-limiter-flexible';
 import { Redis } from 'ioredis';
 import helmet from 'helmet';
+import cors from 'cors';
 import errorHandler from './middlewares/errorHandler.ts';
 import logger from './util/logger.ts';
 
@@ -16,6 +17,7 @@ const redisClient = new Redis(redis_url ?? 'redis://localhost:6379');
 connectDB();
 
 app.use(helmet());
+app.use(cors());
 app.use(express.json());
 
 app.use((req, res, next) => {
