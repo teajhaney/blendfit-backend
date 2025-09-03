@@ -9,7 +9,7 @@ export const signup = async (req: Request, res: Response) => {
   logger.info('Sign up endpoint hit....');
 
   try {
-    const { firstName, lastName, email, password } = signupSchema.parse(
+    const { firstName, lastName, email, password, role } = signupSchema.parse(
       req.body
     );
 
@@ -24,6 +24,7 @@ export const signup = async (req: Request, res: Response) => {
       lastName,
       email,
       password,
+      role,
     });
 
     const { password: _, ...userWithoutPassword } = newUser.toObject();
@@ -93,3 +94,4 @@ export const signin = async (req: Request, res: Response) => {
     });
   }
 };
+

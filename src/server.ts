@@ -10,6 +10,7 @@ import cors from 'cors';
 import errorHandler from './middlewares/errorHandler.ts';
 import logger from './util/logger.ts';
 import authRoutes from './routes/auth.route.ts';
+import userRoutes from './routes/user.route.ts';
 const app = express();
 
 const redisClient = new Redis(redis_url ?? 'redis://localhost:6379');
@@ -52,6 +53,9 @@ app.use((req, res, next) => {
 
 //auth route
 app.use('/api/auth', authRoutes);
+
+//user route
+app.use('/api/auth', userRoutes);
 
 //error handler middleware
 app.use(errorHandler);
