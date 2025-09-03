@@ -10,7 +10,7 @@ import type { User } from '../types/index.ts';
 // }
 
 const generateToken = async (user: any) => {
-  const accesToken = jwt.sign(
+  const accessToken = jwt.sign(
     {
       userId: user._id,
       firstName: user.firstName,
@@ -21,7 +21,7 @@ const generateToken = async (user: any) => {
     { expiresIn: '7d' }
   );
 
-  return accesToken;
+  return accessToken;
 };
 
 export default generateToken;

@@ -9,7 +9,7 @@ import helmet from 'helmet';
 import cors from 'cors';
 import errorHandler from './middlewares/errorHandler.ts';
 import logger from './util/logger.ts';
-
+import authRoutes from './routes/auth.route.ts';
 const app = express();
 
 const redisClient = new Redis(redis_url ?? 'redis://localhost:6379');
@@ -49,6 +49,9 @@ app.use((req, res, next) => {
       });
     });
 });
+
+//auth route
+app.use('/api/auth', authRoutes);
 
 //error handler middleware
 app.use(errorHandler);

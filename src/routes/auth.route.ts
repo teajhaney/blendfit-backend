@@ -1,11 +1,9 @@
 import { Router } from 'express';
-import { signup } from '../controllers/auth.controller.ts';
-
+import { signin, signup } from '../controllers/auth.controller.ts';
 
 const router = Router();
 
-
-router.post('/register', signup);
+router.post('/signup', signup);
+router.post('/signin', signin);
 
 export default router;
-
