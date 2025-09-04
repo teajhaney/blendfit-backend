@@ -23,7 +23,8 @@ export interface Request {
 }
 
 //product
-export interface Product extends Document {
+export interface IProduct extends Document {
+  _id: Types.ObjectId;
   name: string;
   description: string;
   price: number;
@@ -34,6 +35,7 @@ export interface Product extends Document {
   gender: Types.ObjectId;
   images: Types.ObjectId[];
   reviews: Types.ObjectId[];
+  userId: Types.ObjectId;
 }
 
 //produc
