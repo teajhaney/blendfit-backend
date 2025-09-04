@@ -11,6 +11,7 @@ import errorHandler from './middlewares/errorHandler.ts';
 import logger from './util/logger.ts';
 import authRoutes from './routes/auth.route.ts';
 import userRoutes from './routes/user.route.ts';
+import categoryRoutes from './routes/category.route.ts';
 const app = express();
 
 const redisClient = new Redis(redis_url ?? 'redis://localhost:6379');
@@ -56,6 +57,9 @@ app.use('/api/auth', authRoutes);
 
 //user route
 app.use('/api/auth', userRoutes);
+
+//category route
+app.use('/api/product', categoryRoutes);
 
 //error handler middleware
 app.use(errorHandler);

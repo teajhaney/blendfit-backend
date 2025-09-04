@@ -15,12 +15,12 @@ export const signinSchema = z.object({
 });
 
 //zod schema for product validation
-export const productSchemaZod = z.object({
+export const productSchema = z.object({
   name: z.string().min(3, 'Name must be at least 3 characters'),
   description: z.string().min(10, 'Description must be at least 10 characters'),
   price: z.number().positive(),
   stock: z.number().int().min(0),
-  sku: z.string().min(5),
+//   sku: z.string().min(5),
   category: z.string().refine(val => Types.ObjectId.isValid(val), {
     message: 'Invalid ObjectId',
   }),
@@ -47,22 +47,27 @@ export const productSchemaZod = z.object({
 });
 
 // Zod schema for category validation
-export const categorySchemaZod = z.object({
+export const categorySchema = z.object({
   name: z.string().min(2, 'Name must be at least 2 characters'),
+});
+export const bulkCategorySchema = z.object({
+  categories: z
+    .array(categorySchema)
+    .min(1, { message: 'At least one category is required' }),
 });
 
 // Zod schema for brand validation
-export const brandSchemaZod = z.object({
+export const brandSchema = z.object({
   name: z.string().min(2, 'Name must be at least 2 characters'),
 });
 
 // Zod schema for gender validation
-export const genderSchemaZod = z.object({
+export const genderSchema = z.object({
   name: z.enum(['men', 'women', 'unisex']),
 });
 
 // Zod schema for product image validation
-export const productImageSchemaZod = z.object({
+export const productImageSchema = z.object({
   url: z.url(),
   publicId: z.string().min(1),
   productId: z.string().refine(val => Types.ObjectId.isValid(val), {
@@ -71,7 +76,7 @@ export const productImageSchemaZod = z.object({
 });
 
 // Zod schema for review validation
-export const reviewSchemaZod = z.object({
+export const reviewSchema = z.object({
   rating: z.number().int().min(1).max(5),
   comment: z.string().optional(),
   user: z.string().refine(val => Types.ObjectId.isValid(val), {
@@ -83,7 +88,7 @@ export const reviewSchemaZod = z.object({
 });
 
 // Zod schema for cart validation
-export const cartSchemaZod = z.object({
+export const cartSchema = z.object({
   userId: z.string().refine(val => Types.ObjectId.isValid(val), {
     message: 'Invalid ObjectId',
   }),
@@ -94,7 +99,7 @@ export const cartSchemaZod = z.object({
 });
 
 // Zod schema for order validation
-export const orderSchemaZod = z.object({
+export const orderSchema = z.object({
   userId: z.string().refine(val => Types.ObjectId.isValid(val), {
     message: 'Invalid ObjectId',
   }),

@@ -2,8 +2,9 @@ import logger from '../util/logger.ts';
 import type { Request, Response } from 'express';
 import { signinSchema, signupSchema } from '../util/validation.ts';
 import { z } from 'zod';
-import User from '../models/user.model.ts';
+import  User from '../models/user.model.ts';
 import generateToken from '../util/generate-token.ts';
+import { handleError } from '../util/helper.ts';
 
 export const signup = async (req: Request, res: Response) => {
   logger.info('Sign up endpoint hit....');
@@ -35,17 +36,7 @@ export const signup = async (req: Request, res: Response) => {
       user: userWithoutPassword,
     });
   } catch (error) {
-    if (error instanceof z.ZodError) {
-      // Handle validation errors from Zod
-      return res
-        .status(400)
-        .json({ message: 'Validation failed', errors: error.issues });
-    }
-    logger.error('Sign up error occured', error);
-    return res.status(500).json({
-      success: false,
-      message: 'Internal server error',
-    });
+    handleError(res, error, 'Sign up');
   }
 };
 
@@ -81,17 +72,6 @@ export const signin = async (req: Request, res: Response) => {
       role: user!.role,
     });
   } catch (error) {
-    if (error instanceof z.ZodError) {
-      // Handle validation errors from Zod
-      return res
-        .status(400)
-        .json({ message: 'Validation failed', errors: error.issues });
-    }
-    logger.error('Sign up error occured', error);
-    return res.status(500).json({
-      success: false,
-      message: 'Internal server error',
-    });
+    handleError(res, error, 'Sign in');
   }
 };
-

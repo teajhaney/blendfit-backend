@@ -1,7 +1,7 @@
 import type { JwtPayload } from 'jsonwebtoken';
 import { Document, Types } from 'mongoose';
 
-export interface User extends Document {
+export interface IUser extends Document {
   firstName: string;
   lastName: string;
   email: string;
@@ -28,7 +28,7 @@ export interface Product extends Document {
   description: string;
   price: number;
   stock: number;
-  sku: string;
+  //   sku: string;
   category: Types.ObjectId;
   brand: Types.ObjectId;
   gender: Types.ObjectId;
@@ -37,25 +37,25 @@ export interface Product extends Document {
 }
 
 //produc
-export interface Category extends Document {
+export interface ICategory extends Document {
   name: string;
 }
 //brand
-export interface Brand extends Document {
+export interface IBrand extends Document {
   name: string;
 }
 //gender
-export interface Gender extends Document {
+export interface IGender extends Document {
   name: 'men' | 'women' | 'unisex';
 }
 //product image
-export interface ProductImage extends Document {
+export interface IProductImage extends Document {
   url: string;
   publicId: string;
   productId: Types.ObjectId;
 }
 //Review
-export interface Review extends Document {
+export interface IReview extends Document {
   rating: number;
   comment: string;
   userId: Types.ObjectId;
@@ -63,14 +63,14 @@ export interface Review extends Document {
 }
 
 //cart
-export interface Cart extends Document {
+export interface ICart extends Document {
   userId: Types.ObjectId;
   productId: Types.ObjectId;
   quantity: number;
 }
 
 //order
-export interface Order extends Document {
+export interface IOrder extends Document {
   userId: Types.ObjectId;
   productId: Types.ObjectId;
   totalPrice: number;

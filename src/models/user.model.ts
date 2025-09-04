@@ -1,14 +1,13 @@
 import { model, Schema } from 'mongoose';
-import type { User } from '../types/index.ts';
+import type { IUser } from '../types/index.ts';
 import * as argon2 from 'argon2';
 
-const userSchema = new Schema<User>(
+const userSchema = new Schema<IUser>(
   {
     firstName: { type: String, required: true },
     lastName: { type: String, required: true },
     email: { type: String, required: true, unique: true },
     password: { type: String, required: true },
-    role: { type: String, enum: ['user', 'admin'], default: 'user' },
   },
   { timestamps: true }
 );
@@ -29,4 +28,5 @@ userSchema.methods.comparePassword = async function (password: string) {
   }
 };
 
-export default model<User>('User', userSchema);
+const User = model<IUser>('User', userSchema);
+export default User;
