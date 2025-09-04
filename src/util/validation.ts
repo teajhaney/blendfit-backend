@@ -20,7 +20,7 @@ export const productSchema = z.object({
   description: z.string().min(10, 'Description must be at least 10 characters'),
   price: z.number().positive(),
   stock: z.number().int().min(0),
-//   sku: z.string().min(5),
+  //   sku: z.string().min(5),
   category: z.string().refine(val => Types.ObjectId.isValid(val), {
     message: 'Invalid ObjectId',
   }),
@@ -59,6 +59,12 @@ export const bulkCategorySchema = z.object({
 // Zod schema for brand validation
 export const brandSchema = z.object({
   name: z.string().min(2, 'Name must be at least 2 characters'),
+});
+
+export const bulkBrandSchema = z.object({
+  categories: z
+    .array(brandSchema)
+    .min(1, { message: 'At least one brand is required' }),
 });
 
 // Zod schema for gender validation
