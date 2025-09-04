@@ -46,7 +46,7 @@ export interface IBrand extends Document {
 }
 //gender
 export interface IGender extends Document {
-  name: 'men' | 'women' | 'unisex';
+  gender: 'men' | 'women' | 'unisex';
 }
 //product image
 export interface IProductImage extends Document {

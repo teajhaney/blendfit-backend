@@ -16,6 +16,6 @@ export function handleError(res: Response, error: unknown, context: string) {
   logger.error(`${context} error occurred`, error);
   return res.status(500).json({
     success: false,
-    message: 'Internal server error',
+    message: `Internal server error: ${error}`,
   });
 }

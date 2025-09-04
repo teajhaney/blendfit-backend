@@ -48,7 +48,7 @@ export const productSchema = z.object({
 
 // Zod schema for category validation
 export const categorySchema = z.object({
-  name: z.string().min(2, 'Name must be at least 2 characters'),
+  name: z.string().min(2, 'Category must be at least 2 characters'),
 });
 export const bulkCategorySchema = z.object({
   categories: z
@@ -58,18 +58,18 @@ export const bulkCategorySchema = z.object({
 
 // Zod schema for brand validation
 export const brandSchema = z.object({
-  name: z.string().min(2, 'Name must be at least 2 characters'),
+  name: z.string().min(2, 'Brand must be at least 2 characters'),
 });
 
 export const bulkBrandSchema = z.object({
-  categories: z
+  brands: z
     .array(brandSchema)
     .min(1, { message: 'At least one brand is required' }),
 });
 
 // Zod schema for gender validation
 export const genderSchema = z.object({
-  name: z.enum(['men', 'women', 'unisex']),
+  gender: z.enum(['men', 'women', 'unisex']),
 });
 
 // Zod schema for product image validation

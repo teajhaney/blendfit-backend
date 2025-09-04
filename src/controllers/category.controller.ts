@@ -13,11 +13,13 @@ export const addCategory = async (
 
   try {
     const { categories } = bulkCategorySchema.parse(req.body);
+    const { name } = categorySchema.parse(req.body);
+
     const category = await Category.insertMany(categories, { ordered: false });
     return res.status(201).json({
       success: true,
-      message: 'Category succcessfully',
-      length: categories.length,
+      message: 'Category created succcessfully',
+      length: category.length,
       category,
     });
   } catch (error) {
