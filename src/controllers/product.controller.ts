@@ -1,21 +1,13 @@
 import type { Request, Response } from 'express';
 import logger from '../util/logger.ts';
-import { handleError } from '../util/helper.ts';
+import { handleError, invalidatePostCache } from '../util/helper.ts';
 import { productSchema } from '../util/validation.ts';
 import Product from '../models/product.model.ts';
 import { Redis } from 'ioredis';
 import { redis_url } from '../config/index.ts';
+import Review from '../models/review.model.ts';
 
 const redisClient = new Redis(redis_url ?? 'redis://localhost:6379');
-const invalidatePostCache = async (req: Request, input: string) => {
-  const cachedKey = `products:${input}`;
-  await redisClient.del(cachedKey);
-
-  const keys = await redisClient.keys('products:*');
-  keys.forEach(async key => {
-    await redisClient.del(key);
-  });
-};
 
 export const createProduct = async (req: Request, res: Response) => {
   logger.info('Create post endpoint hit....');
@@ -35,13 +27,13 @@ export const createProduct = async (req: Request, res: Response) => {
     });
 
     //invalidate redis product
-    await invalidatePostCache(req, newProduct._id.toString());
+    await invalidatePostCache(newProduct._id.toString());
 
     logger.info('Product created successfully', newProduct);
     return res.status(201).json({
       success: true,
       message: 'Product created successfully',
-      post: newProduct,
+      product: newProduct,
     });
   } catch (error) {
     handleError(res, error, 'Create post');
@@ -173,9 +165,7 @@ export const updateProduct = async (req: Request, res: Response) => {
     );
 
     //invalidate redis product
-    await invalidatePostCache(req, updatedProduct!._id.toString());
-
-
+    await invalidatePostCache(updatedProduct!._id.toString());
 
     logger.info('Product updated successfully');
     return res.status(200).json({
@@ -189,9 +179,9 @@ export const updateProduct = async (req: Request, res: Response) => {
 };
 
 export const deleteProduct = async (req: Request, res: Response) => {
+  logger.info('Delete product endpoint hit....');
   try {
     const productId = req.params.id;
-    const cachekey = `products:${productId}`;
     const data = productSchema.partial().parse(req.body);
 
     const product = await Product.findById(productId);
@@ -210,21 +200,23 @@ export const deleteProduct = async (req: Request, res: Response) => {
       });
     }
 
-    const updatedProduct = await Product.findByIdAndDelete(
-      productId,
-      { $set: data },
-    );
+    const deletedProduct = await Product.findByIdAndDelete(productId, {
+      $set: data,
+    });
+
+    // Delete all reviews associated with this product
+    await Review.deleteMany({ productId: deletedProduct!._id });
 
     //invalidate redis product
-    await invalidatePostCache(req, updatedProduct!._id.toString());
+    await invalidatePostCache(deletedProduct!._id.toString());
 
-    logger.info('Product updated successfully');
+    logger.info('Product deleted successfully');
     return res.status(200).json({
       success: true,
-      message: 'Product updated successfully',
-      updatedProduct,
+      message: 'Product deleted successfully',
+      deletedProduct,
     });
   } catch (error) {
-    handleError(res, error, 'update product');
+    handleError(res, error, 'delete product');
   }
 };

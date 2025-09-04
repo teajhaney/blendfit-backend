@@ -34,7 +34,7 @@ export interface IProduct extends Document {
   brand: Types.ObjectId;
   gender: Types.ObjectId;
   images: Types.ObjectId[];
-  reviews: Types.ObjectId[];
+//   reviews: Types.ObjectId[];
   userId: Types.ObjectId;
 }
 
@@ -58,6 +58,7 @@ export interface IProductImage extends Document {
 }
 //Review
 export interface IReview extends Document {
+  _id: Types.ObjectId;
   rating: number;
   comment: string;
   userId: Types.ObjectId;
@@ -66,6 +67,7 @@ export interface IReview extends Document {
 
 //cart
 export interface ICart extends Document {
+  _id: Types.ObjectId;
   userId: Types.ObjectId;
   productId: Types.ObjectId;
   quantity: number;
@@ -73,6 +75,7 @@ export interface ICart extends Document {
 
 //order
 export interface IOrder extends Document {
+  _id: Types.ObjectId;
   userId: Types.ObjectId;
   productId: Types.ObjectId;
   totalPrice: number;

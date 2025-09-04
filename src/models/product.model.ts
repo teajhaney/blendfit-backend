@@ -16,7 +16,7 @@ const productSchema = new Schema<IProduct>(
     brand: { type: Schema.Types.ObjectId, ref: 'Brand', required: true },
     gender: { type: Schema.Types.ObjectId, ref: 'Gender', required: true },
     images: [{ type: Schema.Types.ObjectId, ref: 'ProductImage' }],
-    reviews: [{ type: Schema.Types.ObjectId, ref: 'Review' }],
+    // reviews: [{ type: Schema.Types.ObjectId, ref: 'Review' }],
   },
   { timestamps: true }
 );

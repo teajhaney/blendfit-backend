@@ -37,13 +37,13 @@ export const productSchema = z.object({
       })
     )
     .optional(),
-  reviews: z
-    .array(
-      z.string().refine(val => Types.ObjectId.isValid(val), {
-        message: 'Invalid ObjectId',
-      })
-    )
-    .optional(),
+  //   reviews: z
+  //     .array(
+  //       z.string().refine(val => Types.ObjectId.isValid(val), {
+  //         message: 'Invalid ObjectId',
+  //       })
+  //     )
+  //     .optional(),
 });
 
 // Zod schema for category validation
@@ -85,9 +85,6 @@ export const productImageSchema = z.object({
 export const reviewSchema = z.object({
   rating: z.number().int().min(1).max(5),
   comment: z.string().optional(),
-  user: z.string().refine(val => Types.ObjectId.isValid(val), {
-    message: 'Invalid ObjectId',
-  }),
   productId: z.string().refine(val => Types.ObjectId.isValid(val), {
     message: 'Invalid ObjectId',
   }),
@@ -106,9 +103,6 @@ export const cartSchema = z.object({
 
 // Zod schema for order validation
 export const orderSchema = z.object({
-  userId: z.string().refine(val => Types.ObjectId.isValid(val), {
-    message: 'Invalid ObjectId',
-  }),
   productId: z.string().refine(val => Types.ObjectId.isValid(val), {
     message: 'Invalid ObjectId',
   }),
