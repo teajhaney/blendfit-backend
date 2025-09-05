@@ -1,6 +1,6 @@
 import type { Request, Response } from 'express';
 import logger from '../util/logger.ts';
-import { handleError, invalidatePostCache } from '../util/helper.ts';
+import { handleError, invalidateRedisCache } from '../util/helper.ts';
 import { productSchema } from '../util/validation.ts';
 import Product from '../models/product.model.ts';
 import { Redis } from 'ioredis';
@@ -27,7 +27,7 @@ export const createProduct = async (req: Request, res: Response) => {
     });
 
     //invalidate redis product
-    await invalidatePostCache(newProduct._id.toString());
+    await invalidateRedisCache(newProduct._id.toString());
 
     logger.info('Product created successfully', newProduct);
     return res.status(201).json({
@@ -165,7 +165,7 @@ export const updateProduct = async (req: Request, res: Response) => {
     );
 
     //invalidate redis product
-    await invalidatePostCache(updatedProduct!._id.toString());
+    await invalidateRedisCache(updatedProduct!._id.toString());
 
     logger.info('Product updated successfully');
     return res.status(200).json({
@@ -200,21 +200,18 @@ export const deleteProduct = async (req: Request, res: Response) => {
       });
     }
 
-    const deletedProduct = await Product.findByIdAndDelete(productId, {
-      $set: data,
-    });
+    const deletedProduct = await Product.findByIdAndDelete(productId);
 
     // Delete all reviews associated with this product
     await Review.deleteMany({ productId: deletedProduct!._id });
 
     //invalidate redis product
-    await invalidatePostCache(deletedProduct!._id.toString());
+    await invalidateRedisCache(deletedProduct!._id.toString());
 
     logger.info('Product deleted successfully');
     return res.status(200).json({
       success: true,
       message: 'Product deleted successfully',
-      deletedProduct,
     });
   } catch (error) {
     handleError(res, error, 'delete product');

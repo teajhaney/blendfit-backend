@@ -1,6 +1,6 @@
 import { Router } from 'express';
 import authMiddleware from '../middlewares/auth.middleware.ts';
-import adminMiddleware from '../middlewares/admin.middleware.ts';
+
 import {
   createReview,
   deleteReview,

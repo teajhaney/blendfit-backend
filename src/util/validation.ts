@@ -92,9 +92,6 @@ export const reviewSchema = z.object({
 
 // Zod schema for cart validation
 export const cartSchema = z.object({
-  userId: z.string().refine(val => Types.ObjectId.isValid(val), {
-    message: 'Invalid ObjectId',
-  }),
   productId: z.string().refine(val => Types.ObjectId.isValid(val), {
     message: 'Invalid ObjectId',
   }),

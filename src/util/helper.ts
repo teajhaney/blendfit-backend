@@ -24,7 +24,7 @@ export function handleError(res: Response, error: unknown, context: string) {
   });
 }
 
-export const invalidatePostCache = async (input: string) => {
+export const invalidateRedisCache = async (input: string) => {
   const cachedKey = `products:${input}`;
   await redisClient.del(cachedKey);
 

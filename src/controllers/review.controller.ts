@@ -31,7 +31,6 @@ export const createReview = async (req: Request, res: Response) => {
 export const deleteReview = async (req: Request, res: Response) => {
   try {
     const reviewId = req.params.id;
-    const data = reviewSchema.partial().parse(req.body);
 
     const review = await Review.findById(reviewId);
 
@@ -49,15 +48,12 @@ export const deleteReview = async (req: Request, res: Response) => {
       });
     }
 
-    const deleteReview = await Review.findByIdAndDelete(reviewId, {
-      $set: data,
-    });
+    await Review.findByIdAndDelete(reviewId);
 
     logger.info('Review deleted successfully');
     return res.status(200).json({
       success: true,
       message: 'Review deleted successfully',
-      deleteReview,
     });
   } catch (error) {
     handleError(res, error, 'delete review');
@@ -77,7 +73,7 @@ export const fetchReviewsByProductId = async (req: Request, res: Response) => {
       });
     }
 
-    const reviews = await Review.find({ productId });
+    const reviews = await Review.find({ productId }).populate('productId');
 
     if (!reviews || reviews.length === 0) {
       return res.status(404).json({
