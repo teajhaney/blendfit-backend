@@ -34,7 +34,7 @@ export interface IProduct extends Document {
   brand: Types.ObjectId;
   gender: Types.ObjectId;
   images: Types.ObjectId[];
-//   reviews: Types.ObjectId[];
+  reviews: Types.ObjectId[];
   userId: Types.ObjectId;
 }
 

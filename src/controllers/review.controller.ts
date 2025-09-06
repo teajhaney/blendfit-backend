@@ -1,6 +1,6 @@
 import type { Request, Response } from 'express';
 import logger from '../util/logger.ts';
-import { handleError } from '../util/helper.ts';
+import { handleError, invalidateRedisCache } from '../util/helper.ts';
 import { reviewSchema } from '../util/validation.ts';
 import Review from '../models/review.model.ts';
 import Product from '../models/product.model.ts';
@@ -17,7 +17,16 @@ export const createReview = async (req: Request, res: Response) => {
       productId,
     });
 
+    await Product.findByIdAndUpdate(
+      productId,
+      { $push: { reviews: review._id } },
+      { new: true, runValidators: true }
+    );
+
+	  
+	  invalidateRedisCache(productId)
     logger.info('Review created successfully');
+
     return res.status(201).json({
       success: true,
       message: 'Review created successfully',

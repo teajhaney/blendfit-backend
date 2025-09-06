@@ -37,13 +37,13 @@ export const productSchema = z.object({
       })
     )
     .optional(),
-  //   reviews: z
-  //     .array(
-  //       z.string().refine(val => Types.ObjectId.isValid(val), {
-  //         message: 'Invalid ObjectId',
-  //       })
-  //     )
-  //     .optional(),
+    reviews: z
+      .array(
+        z.string().refine(val => Types.ObjectId.isValid(val), {
+          message: 'Invalid ObjectId',
+        })
+      )
+      .optional(),
 });
 
 // Zod schema for category validation

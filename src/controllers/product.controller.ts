@@ -58,9 +58,18 @@ export const fetchAllProducts = async (req: Request, res: Response) => {
     }
     const totalProducts = await Product.countDocuments();
 
-    const allProducts = await Product.find({}).skip(skip).limit(limit).sort({
-      createdAt: -1,
-    });
+    const allProducts = await Product.find({})
+      .skip(skip)
+      .limit(limit)
+      .sort({
+        createdAt: -1,
+      })
+      .populate([
+        { path: 'category' },
+        { path: 'brand' },
+        { path: 'gender' },
+        { path: 'reviews' },
+      ]);
 
     if (!allProducts || allProducts.length === 0) {
       return res.status(200).json({
@@ -113,7 +122,12 @@ export const fetchSingleProduct = async (req: Request, res: Response) => {
       });
     }
 
-    const product = await Product.findById(productId);
+    const product = await Product.findById(productId).populate([
+      { path: 'category' },
+      { path: 'brand' },
+      { path: 'gender' },
+      { path: 'reviews' },
+    ]);
 
     if (!product) {
       logger.warn('Product not found');
@@ -162,7 +176,12 @@ export const updateProduct = async (req: Request, res: Response) => {
       productId,
       { $set: data },
       { new: true, runValidators: true }
-    );
+    ).populate([
+      { path: 'category' },
+      { path: 'brand' },
+      { path: 'gender' },
+      { path: 'reviews' },
+    ]);
 
     //invalidate redis product
     await invalidateRedisCache(updatedProduct!._id.toString());
@@ -182,7 +201,6 @@ export const deleteProduct = async (req: Request, res: Response) => {
   logger.info('Delete product endpoint hit....');
   try {
     const productId = req.params.id;
-    const data = productSchema.partial().parse(req.body);
 
     const product = await Product.findById(productId);
 
