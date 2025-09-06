@@ -24,7 +24,7 @@ export const createReview = async (req: Request, res: Response) => {
     );
 
 	  
-	  invalidateRedisCache(productId)
+	 await  invalidateRedisCache(productId)
     logger.info('Review created successfully');
 
     return res.status(201).json({

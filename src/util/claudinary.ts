@@ -14,25 +14,16 @@ cloudinary.v2.config({
 });
 
 export const uploadMediaToCloudinary = async (file: Express.Multer.File) => {
-  return new Promise((resolve, reject) => {
-    const uploadStream = cloudinary.v2.uploader.upload_stream(
-      {
-        resource_type: 'auto',
-      },
-      (error, result) => {
-        if (error) {
-          logger.error('Error while uploading to cloudinary', error);
-          reject(error);
-        } else {
-          resolve(result);
-        }
-      }
-    );
-    uploadStream.end(file.buffer);
-  });
+  try {
+    const result = await cloudinary.v2.uploader.upload(file.path);
+    return {
+      secure_url: result.secure_url,
+      public_id: result.public_id,
+    };
+  } catch (error) {
+    console.error('error while uploadning to cloudinary', error);
+  }
 };
-
-
 
 export const deleteMediaFromCloudinary = async (publicId: string) => {
   try {

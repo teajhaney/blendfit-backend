@@ -5,7 +5,7 @@ import {
   deleteMediaFromCloudinary,
   uploadMediaToCloudinary,
 } from '../util/claudinary.ts';
-import { handleError } from '../util/helper.ts';
+import { handleError, invalidateRedisCache } from '../util/helper.ts';
 import logger from '../util/logger.ts';
 import type { Request, Response } from 'express';
 import fs from 'fs';
@@ -19,35 +19,6 @@ export const uploadMedia = async (req: Request, res: Response) => {
       return res.status(400).json({
         success: false,
         message: 'No file uploaded. Please upload an image.',
-      });
-    }
-
-    // Add detailed file debugging
-    console.log('File details:', {
-      originalname: req.file.originalname,
-      mimetype: req.file.mimetype,
-      size: req.file.size,
-      path: req.file.path,
-      filename: req.file.filename,
-    });
-
-    // Check if file exists and has content
-    if (!fs.existsSync(req.file.path)) {
-      logger.error('File does not exist at path:', req.file.path);
-      return res.status(400).json({
-        success: false,
-        message: 'File upload failed - file not found.',
-      });
-    }
-
-    const fileStats = fs.statSync(req.file.path);
-    console.log('File stats:', { size: fileStats.size });
-
-    if (fileStats.size === 0) {
-      logger.error('File is empty');
-      return res.status(400).json({
-        success: false,
-        message: 'File is empty.',
       });
     }
 
@@ -74,8 +45,10 @@ export const uploadMedia = async (req: Request, res: Response) => {
       url: secure_url,
       publicId: public_id,
       productId,
-      user: userId,
+      userId: userId,
     });
+
+    await invalidateRedisCache(productId);
 
     logger.info('Media uploaded to  to database');
 
@@ -113,18 +86,34 @@ export const getAllMedia = async (req: Request, res: Response) => {
 };
 
 export const deleteMedia = async (req: Request, res: Response) => {
+  logger.info('Delete media endpoint hit...');
   try {
     const mediaId = req.params.id;
-    const mediaToDelete = await Media.find({ _id: { $in: mediaId } });
+    const mediaToDelete = await Media.findById(mediaId);
 
-    for (const media of mediaToDelete) {
-      await deleteMediaFromCloudinary(media.publicId);
-      await Media.findByIdAndDelete(media._id);
+    if (!mediaToDelete) {
+      return res.status(404).json({
+        success: false,
+        message: 'Media not found',
+      });
     }
+
+    if (mediaToDelete.userId.toString() !== req.user?.userId) {
+      return res.status(403).json({
+        success: false,
+        message: 'You are not authorized to delete this media',
+      });
+    }
+
+    await deleteMediaFromCloudinary(mediaToDelete.publicId);
+    await Media.findByIdAndDelete(mediaToDelete._id);
+
+    await invalidateRedisCache(mediaToDelete.productId.toString());
+
     logger.info('Media deleted successfully');
     res.status(200).json({
       success: true,
-      message: 'Media fetched successfully',
+      message: 'Media deleted successfully',
     });
   } catch (error) {
     handleError(res, error, 'Deleting media');

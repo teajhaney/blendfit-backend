@@ -26,11 +26,11 @@ const checkFileType = (
   req: Request,
   file: Express.Multer.File,
   cb: FileFilterCallback
-): void => {
+) => {
   if (file.mimetype.startsWith('image')) {
     cb(null, true);
   } else {
-    cb(new Error('Not an image! Please upload an image'));
+    cb(new Error('Not an image!Please upload an image'));
   }
 };
 
@@ -38,7 +38,10 @@ const checkFileType = (
 
 const multerMiddleware = multer({
   storage: storage,
-  limits: { fileSize: 5 * 1024 * 1024 }, //5MB
+  limits: {
+    fileSize: 5 * 1024 * 1024, // 5MB max
+    files: 1, // Only allow 1 file at a time
+  },
   fileFilter: checkFileType,
 });
 

@@ -67,7 +67,7 @@ app.use('/api/products', genderRoutes);
 app.use('/api/products', productRoutes);
 app.use('/api/products', reviewRoutes);
 app.use('/api/cart', cartRoutes);
-app.use('/api/products', mediaRoutes);
+app.use('/api/media', mediaRoutes);
 
 //error handler middleware
 app.use(errorHandler);
