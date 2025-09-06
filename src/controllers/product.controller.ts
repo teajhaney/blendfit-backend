@@ -65,11 +65,12 @@ export const fetchAllProducts = async (req: Request, res: Response) => {
         createdAt: -1,
       })
       .populate([
-        { path: 'category' },
-        { path: 'brand' },
-        { path: 'gender' },
-        { path: 'reviews' },
-      ]);
+        { path: 'category', select: 'name', options: { _id: false } },
+        { path: 'brand', select: 'name' },
+        { path: 'gender', select: 'gender' },
+        { path: 'reviews', select: 'comment rating' },
+      ])
+      .exec();
 
     if (!allProducts || allProducts.length === 0) {
       return res.status(200).json({
@@ -122,13 +123,14 @@ export const fetchSingleProduct = async (req: Request, res: Response) => {
       });
     }
 
-    const product = await Product.findById(productId).populate([
-      { path: 'category' },
-      { path: 'brand' },
-      { path: 'gender' },
-      { path: 'reviews' },
-    ]);
-
+    const product = await Product.findById(productId)
+      .populate([
+        { path: 'category', select: 'name ' },
+        { path: 'brand', select: 'name ' },
+        { path: 'gender', select: 'gender ' },
+        { path: 'reviews', select: 'rating comment ' },
+      ])
+      .lean();
     if (!product) {
       logger.warn('Product not found');
       return res.status(404).json({
@@ -176,12 +178,14 @@ export const updateProduct = async (req: Request, res: Response) => {
       productId,
       { $set: data },
       { new: true, runValidators: true }
-    ).populate([
-      { path: 'category' },
-      { path: 'brand' },
-      { path: 'gender' },
-      { path: 'reviews' },
-    ]);
+    )
+      .populate([
+        { path: 'category', select: 'name', options: { _id: false } },
+        { path: 'brand', select: 'name' },
+        { path: 'gender', select: 'gender' },
+        { path: 'reviews', select: 'comment rating' },
+      ])
+      .exec();
 
     //invalidate redis product
     await invalidateRedisCache(updatedProduct!._id.toString());
