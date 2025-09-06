@@ -6,6 +6,8 @@ import Product from '../models/product.model.ts';
 import { Redis } from 'ioredis';
 import { redis_url } from '../config/index.ts';
 import Review from '../models/review.model.ts';
+import Media from '../models/product.image.model.ts';
+import { deleteMediaFromCloudinary } from '../util/claudinary.ts';
 
 const redisClient = new Redis(redis_url ?? 'redis://localhost:6379');
 
@@ -68,6 +70,7 @@ export const fetchAllProducts = async (req: Request, res: Response) => {
         { path: 'category', select: 'name', options: { _id: false } },
         { path: 'brand', select: 'name' },
         { path: 'gender', select: 'gender' },
+        { path: 'images', select: 'url' },
         { path: 'reviews', select: 'comment rating' },
       ])
       .exec();
@@ -125,12 +128,13 @@ export const fetchSingleProduct = async (req: Request, res: Response) => {
 
     const product = await Product.findById(productId)
       .populate([
-        { path: 'category', select: 'name ' },
-        { path: 'brand', select: 'name ' },
-        { path: 'gender', select: 'gender ' },
-        { path: 'reviews', select: 'rating comment ' },
+        { path: 'category', select: 'name', options: { _id: false } },
+        { path: 'brand', select: 'name' },
+        { path: 'gender', select: 'gender' },
+        { path: 'images', select: 'url' },
+        { path: 'reviews', select: 'comment rating' },
       ])
-      .lean();
+      .exec();
     if (!product) {
       logger.warn('Product not found');
       return res.status(404).json({
@@ -183,6 +187,7 @@ export const updateProduct = async (req: Request, res: Response) => {
         { path: 'category', select: 'name', options: { _id: false } },
         { path: 'brand', select: 'name' },
         { path: 'gender', select: 'gender' },
+        { path: 'images', select: 'url' },
         { path: 'reviews', select: 'comment rating' },
       ])
       .exec();
@@ -226,6 +231,13 @@ export const deleteProduct = async (req: Request, res: Response) => {
 
     // Delete all reviews associated with this product
     await Review.deleteMany({ productId: deletedProduct!._id });
+
+    // Delete all media associated with this product
+    const medias = await Media.find({ productId: deletedProduct!._id });
+    for (const media of medias) {
+      await deleteMediaFromCloudinary(media.publicId);
+    }
+    await Media.deleteMany({ productId: deletedProduct!._id });
 
     //invalidate redis product
     await invalidateRedisCache(deletedProduct!._id.toString());

@@ -6,7 +6,7 @@ import { redis_url } from '../config/index.ts';
 
 const redisClient = new Redis(redis_url ?? 'redis://localhost:6379');
 
-export function handleError(res: Response, error: unknown, context: string) {
+export function handleError(res: Response, error: any, context: string) {
   if (error instanceof z.ZodError) {
     // Zod validation error
     return res.status(400).json({

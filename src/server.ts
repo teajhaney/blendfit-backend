@@ -17,6 +17,7 @@ import genderRoutes from './routes/gender.routes.ts';
 import productRoutes from './routes/product.routes.ts';
 import reviewRoutes from './routes/review.routes.ts';
 import cartRoutes from './routes/cart.routes.ts';
+import mediaRoutes from './routes/media.route.ts';
 const app = express();
 
 const redisClient = new Redis(redis_url ?? 'redis://localhost:6379');
@@ -66,6 +67,7 @@ app.use('/api/products', genderRoutes);
 app.use('/api/products', productRoutes);
 app.use('/api/products', reviewRoutes);
 app.use('/api/cart', cartRoutes);
+app.use('/api/products', mediaRoutes);
 
 //error handler middleware
 app.use(errorHandler);

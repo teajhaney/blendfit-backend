@@ -55,6 +55,7 @@ export interface IProductImage extends Document {
   url: string;
   publicId: string;
   productId: Types.ObjectId;
+  userId: Types.ObjectId;
 }
 //Review
 export interface IReview extends Document {
@@ -82,4 +83,10 @@ export interface IOrder extends Document {
   shippingAddress: object;
   status: 'pending' | 'processing' | 'shipped' | 'delivered' | 'cancelled';
   quantity: number;
+}
+
+
+export interface CloudinaryUploadResult {
+  secure_url: string;
+  public_id: string;
 }

@@ -37,13 +37,13 @@ export const productSchema = z.object({
       })
     )
     .optional(),
-    reviews: z
-      .array(
-        z.string().refine(val => Types.ObjectId.isValid(val), {
-          message: 'Invalid ObjectId',
-        })
-      )
-      .optional(),
+  reviews: z
+    .array(
+      z.string().refine(val => Types.ObjectId.isValid(val), {
+        message: 'Invalid ObjectId',
+      })
+    )
+    .optional(),
 });
 
 // Zod schema for category validation
@@ -77,6 +77,9 @@ export const productImageSchema = z.object({
   url: z.url(),
   publicId: z.string().min(1),
   productId: z.string().refine(val => Types.ObjectId.isValid(val), {
+    message: 'Invalid ObjectId',
+  }),
+  userId: z.string().refine(val => Types.ObjectId.isValid(val), {
     message: 'Invalid ObjectId',
   }),
 });
