@@ -1,6 +1,5 @@
 import type { Request, Response } from 'express';
 import Cart from '../models/cart.model.ts';
-import Product from '../models/product.model.ts';
 import Order from '../models/order.model.ts';
 import { handleError } from '../util/helper.ts';
 import { orderSchema } from '../util/validation.ts';
@@ -49,6 +48,8 @@ export const createOrder = async (req: Request, res: Response) => {
       status: 'pending',
       quantity: totalQuantity,
     });
+
+    // await order.populate('productId');
 
     // 5. Clear user’s cart
     // await Cart.deleteMany({ userId });
