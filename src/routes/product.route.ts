@@ -17,4 +17,6 @@ router.get('/:id', fetchSingleProduct);
 router.put('/:id', authMiddleware, adminMiddleware, updateProduct);
 router.delete('/:id', authMiddleware, adminMiddleware, deleteProduct);
 
+
 export default router;
+

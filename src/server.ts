@@ -19,6 +19,7 @@ import reviewRoutes from './routes/review.route.ts';
 import cartRoutes from './routes/cart.routes.ts';
 import mediaRoutes from './routes/media.route.ts';
 import orderRoutes from './routes/order.route.ts';
+import searchRoutes from './routes/search.routes.ts';
 const app = express();
 
 const redisClient = new Redis(redis_url ?? 'redis://localhost:6379');
@@ -70,6 +71,7 @@ app.use('/api/products', reviewRoutes);
 app.use('/api/cart', cartRoutes);
 app.use('/api/media', mediaRoutes);
 app.use('/api/order', orderRoutes);
+app.use('/api/search', searchRoutes);
 
 //error handler middleware
 app.use(errorHandler);

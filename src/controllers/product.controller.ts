@@ -251,3 +251,5 @@ export const deleteProduct = async (req: Request, res: Response) => {
     handleError(res, error, 'delete product');
   }
 };
+
+
