@@ -13,11 +13,12 @@ import authRoutes from './routes/auth.route.ts';
 import userRoutes from './routes/user.route.ts';
 import categoryRoutes from './routes/category.route.ts';
 import brandRoutes from './routes/brand.routes.ts';
-import genderRoutes from './routes/gender.routes.ts';
-import productRoutes from './routes/product.routes.ts';
-import reviewRoutes from './routes/review.routes.ts';
+import genderRoutes from './routes/gender.route.ts';
+import productRoutes from './routes/product.route.ts';
+import reviewRoutes from './routes/review.route.ts';
 import cartRoutes from './routes/cart.routes.ts';
 import mediaRoutes from './routes/media.route.ts';
+import orderRoutes from './routes/order.route.ts';
 const app = express();
 
 const redisClient = new Redis(redis_url ?? 'redis://localhost:6379');
@@ -68,6 +69,7 @@ app.use('/api/products', productRoutes);
 app.use('/api/products', reviewRoutes);
 app.use('/api/cart', cartRoutes);
 app.use('/api/media', mediaRoutes);
+app.use('/api/order', orderRoutes);
 
 //error handler middleware
 app.use(errorHandler);

@@ -78,7 +78,7 @@ export interface ICart extends Document {
 export interface IOrder extends Document {
   _id: Types.ObjectId;
   userId: Types.ObjectId;
-  productId: Types.ObjectId;
+  productId: Types.ObjectId[];
   totalPrice: number;
   shippingAddress: object;
   status: 'pending' | 'processing' | 'shipped' | 'delivered' | 'cancelled';
