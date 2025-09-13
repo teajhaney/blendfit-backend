@@ -18,7 +18,7 @@ This is a comprehensive, high-performance e-commerce REST API built with TypeScr
 - **Multer**: Middleware for handling `multipart/form-data`, primarily used for file uploads.
 - **Rate Limiter Flexible**: Protects the API from brute-force attacks and limits request rates per IP.
 
-## Getting Started
+
 
 ### Installation
 
