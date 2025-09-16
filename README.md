@@ -47,7 +47,6 @@ This is a comprehensive, high-performance e-commerce REST API built with TypeScr
 
 Create a `.env` file in the project root and add the following variables:
 
-```plaintext
 # Server Configuration
 PORT=8000
 NODE_ENV=development
