@@ -29,7 +29,6 @@ export interface IProduct extends Document {
   description: string;
   price: number;
   stock: number;
-  //   sku: string;
   category: Types.ObjectId;
   brand: Types.ObjectId;
   gender: Types.ObjectId;

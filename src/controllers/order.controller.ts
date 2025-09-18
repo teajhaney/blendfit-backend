@@ -49,10 +49,9 @@ export const createOrder = async (req: Request, res: Response) => {
       quantity: totalQuantity,
     });
 
-    // await order.populate('productId');
 
     // 5. Clear user’s cart
-    // await Cart.deleteMany({ userId });
+    await Cart.deleteMany({ userId });
 
     logger.info('Order created successfully');
     return res.status(201).json({

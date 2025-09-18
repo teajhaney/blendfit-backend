@@ -103,12 +103,6 @@ export const cartSchema = z.object({
 
 // Zod schema for order validation
 export const orderSchema = z.object({
-  //   productId: z.array(
-  //     z.string().refine(val => Types.ObjectId.isValid(val), {
-  //       message: 'Invalid ObjectId',
-  //     })
-  //   ),
-  //   totalPrice: z.number().positive(),
   shippingAddress: z.object({
     street: z.string().min(3, 'Street must be at least 3 characters'),
     city: z.string().min(2, 'City must be at least 2 characters'),
@@ -118,5 +112,4 @@ export const orderSchema = z.object({
   status: z
     .enum(['pending', 'processing', 'shipped', 'delivered', 'cancelled'])
     .optional(),
-  //   quantity: z.number().int().min(1),
 });

@@ -1,8 +1,8 @@
 import jwt, { type JwtPayload } from 'jsonwebtoken';
 import { JWT_SECRET } from '../config/index.ts';
-import type { User } from '../types/index.ts';
+import type { IUser } from '../types/index.ts';
 
-const generateToken = async (user: User) => {
+const generateToken = async (user: IUser) => {
   if (!JWT_SECRET) {
     throw new Error('JWT_SECRET is not defined');
   }
